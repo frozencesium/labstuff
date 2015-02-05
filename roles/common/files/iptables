@@ -1,0 +1,28 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 111 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 965 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 2049 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 4379 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 5001 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 16514 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 24007 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 39543 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 54321 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 55863 -j ACCEPT 
+-A INPUT -p tcp -m multiport --dports 5900:6923 -j ACCEPT 
+-A INPUT -p tcp -m multiport --dports 24009:24108 -j ACCEPT 
+-A INPUT -p tcp -m multiport --dports 38465:38468 -j ACCEPT 
+-A INPUT -p tcp -m multiport --dports 49152:49216 -j ACCEPT 
+-A INPUT -p tcp -m multiport --dports 50152:50251 -j ACCEPT 
+-A INPUT -p udp -m udp --dport 111 -j ACCEPT 
+-A INPUT -p udp -m udp --dport 161 -j ACCEPT 
+-A INPUT -p udp -m udp --dport 963 -j ACCEPT 
+-A FORWARD -m physdev ! --physdev-is-bridged -j REJECT --reject-with icmp-host-prohibited 
+COMMIT

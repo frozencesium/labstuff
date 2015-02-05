@@ -1,0 +1,38 @@
+---
+# Tasks for the rhev nodes
+
+- name: Create the RHEV nodes
+  shell: service NetworkManager stop && chkconfig NetworkManager disable
+  shell: sed -i 's/ONBOOT=no/ONBOOT=yes/g' /etc/sysconfig/network-scripts/ifcfg-eth0
+  shell: subscription-manager attach --pool=$(subscription-manager list --available | grep -A8 "Red Hat Enterprise Linux Server")
+  shell: subscription-manager attach --pool=$(subscription-manager list --available | grep -A8 "Red Hat Enterprise Virtualization")
+  shell: subscription-manager repos --enable=rhel-6-server-rhev-mgmt-agent-rpms
+
+# RHEVm
+#- name: Create the RHEV Repository.
+#  shell: subscription-manager attach --pool=$(subscription-manager list --available | grep -A8 "Red Hat Enterprise Linux Server")
+#  shell: subscription-manager attach --pool=$(subscription-manager list --available | grep -A8 "Red Hat Enterprise Virtualization")
+#  shell: yum-config-manager --enable rhel-6-server-rpms && yum-config-manager --enable rhel-6-server-supplementary-rpms
+#  shell: yum-config-manager --enable rhel-6-server-rhevm-3.4-rpms && yum-config-manager --enable jb-eap-6-for-rhel-6-server-rpms
+
+#  shell: yum -y localinstall http://plain.resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm
+
+- name: Install RHEV 3.5 packages
+  yum : name={{ item }} state=present disable_gpg_check=yes
+  with_items:
+  - rhev-engine
+
+#- name: create a file for something
+#  file: path=/etc/foo.conf state=touch mode="u=rw,g=r,o=r"
+
+#- name: SELinux - configure sebooleans
+#  seboolean:  name={{ item }} state=true persistent=yes
+#  with_items:
+#      - httpd_unified
+#      - httpd_execmem
+#      - httpd_can_network_connect
+#      - httpd_can_network_relay
+#      - httpd_run_stickshift
+#      - named_write_master_zones
+#      - httpd_verify_dns
+#      - allow_ypbind

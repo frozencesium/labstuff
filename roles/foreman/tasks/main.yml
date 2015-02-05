@@ -1,0 +1,28 @@
+---
+# Tasks for the foreman nodes
+
+- name: Create the Foreman Repository.
+  shell: yum -y install http://yum.theforeman.org/releases/1.7/el6/x86_64/foreman-release.rpm
+
+- name: upgrade all packages
+  yum: name=* state=latest
+
+- name: Install Foreman 1.7 Packages
+  yum : name={{ item }} state=present
+  with_items:
+  - foreman-installer
+
+#- name: create a file for something
+#  file: path=/etc/foo.conf state=touch mode="u=rw,g=r,o=r"
+
+#- name: SELinux - configure sebooleans
+#  seboolean:  name={{ item }} state=true persistent=yes
+#  with_items:
+#      - httpd_unified
+#      - httpd_execmem
+#      - httpd_can_network_connect
+#      - httpd_can_network_relay
+#      - httpd_run_stickshift
+#      - named_write_master_zones
+#      - httpd_verify_dns
+#      - allow_ypbind

@@ -1,0 +1,6 @@
+[ovirt]
+compute1.somedomain.org
+compute2.somedomain.org
+
+[foreman]
+#not.used.yet

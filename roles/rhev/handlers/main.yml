@@ -1,0 +1,12 @@
+---
+# handlers for ovirt nodes
+
+- name: restart sshd
+  service: name=sshd state=restarted
+
+- name: restart oddjobd
+  service: name=oddjobd state=restarted
+
+- name: restart sssd
+  service: name=sssd state=restarted
+

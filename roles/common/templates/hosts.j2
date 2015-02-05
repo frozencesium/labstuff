@@ -1,0 +1,14 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+
+## Infrastructure
+192.168.1.1 router."{{ domain_name }}" router
+192.168.1.254 switch."{{ domain_name }}" switch
+
+## Infiniband
+#10.10.0.3 ib0.c1."{{ domain_name }}" ib0.c1
+#10.10.0.4 ib0.c2."{{ domain_name }}" ib0.c2
+
+## Machines
+{% for host in groups['all'] %}
+{{ hostvars[host]['ansible_' + iface].ipv4.address }}  {{ host }} {{ hostvars[host].ansible_hostname }}
+{% endfor %}

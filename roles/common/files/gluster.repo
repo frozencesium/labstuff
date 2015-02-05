@@ -1,0 +1,5 @@
+[gluster]
+name=GlusterFS for CentOS-$basearch
+baseurl=http://download.gluster.org/pub/gluster/glusterfs/LATEST/RHEL/epel-6/x86_64/
+enabled=1
+gpgcheck=0

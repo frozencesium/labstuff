@@ -1,0 +1,6 @@
+---
+# Global Vars for OpenShift
+
+iface: '{{ ansible_default_ipv4.interface }}'
+domain_name: dude.localdomain
+ansible_ssh_port: 22

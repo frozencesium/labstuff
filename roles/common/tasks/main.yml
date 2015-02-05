@@ -1,0 +1,97 @@
+---
+# Common tasks across all nodes
+
+- name: Install common packages
+  yum : name={{ item }} state=present
+  with_items:
+   - bind-utils
+   - curl
+   - httpd-tools
+   - libselinux-python
+   - ntp
+   - policycoreutils
+   - policycoreutils-python
+   - vim
+   - yum-utils
+
+- name: upgrade all packages
+  yum: name=* state=latest
+
+- name: make sure we have the right time
+  shell: ntpdate -u 0.centos.pool.ntp.org
+
+- name: start the ntp service
+  service: name=ntpd state=started enabled=yes
+
+- name: Create the hosts file for all machines
+  template: src=hosts.j2 dest=/etc/hosts
+
+- name: Create the EPEL Repository.
+  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+
+- name: Create the SCL Repository.
+  copy: src=scl.repo dest=/etc/yum.repos.d/scl.repo
+
+- name: Create the Extras Repository.
+  copy: src=extras.repo dest=/etc/yum.repos.d/extras.repo
+
+- name: Create the Gluster Repository.
+  copy: src=gluster.repo dest=/etc/yum.repos.d/gluster.repo
+
+- name: Create the GPG key for EPEL
+  copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
+
+- name: Create the iptables file
+  copy: src=iptables dest=/etc/sysconfig/iptables
+  notify: restart iptables
+
+#- name: Install the 'Infiniband Support' package group
+#  yum: name="@Infiniband Support" state=present
+
+#- name: Install Infiniband Packages
+#  yum : name={{ item }} state=present
+#  with_items:
+#   - infiniband-diags
+#   - opensm
+#   - perftest
+#   - qperf
+
+- name: Install EPEL Specific Packages
+  yum : name={{ item }} state=present
+  with_items:
+   - atop
+   - fail2ban
+   - iperf
+   - nmap
+   - tmux
+   - xfsprogs
+
+- name: Install GlusterFS packages
+  yum : name={{ item }} state=present
+  with_items:
+   - glusterfs
+   - glusterfs-fuse
+   - glusterfs-geo-replication
+   - glusterfs-rdma
+   - glusterfs-server
+
+- name: Start and chkconfig system services to 'on'
+  service: name={{ item }} enabled=yes
+  with_items:
+   - rdma
+   - opensm
+   - fail2ban
+   - glusterd
+
+- name: Restart machines
+  command: shutdown -r now "Ansible updates triggered"
+  async: 0
+  poll: 0
+  ignore_errors: true
+
+- name: Wait for servers to come back up
+  local_action: wait_for host={{ inventory_hostname }}
+                         port={{ansible_ssh_port}}
+                         delay=15
+  sudo: false
+
